@@ -1,0 +1,14 @@
+{
+  "name": "assignment-infiniteintegercalculator",
+  "version": "1.0.0",
+  "description": "This is an infinite integer calculator for adding, subtracting or multiplying 2 infinite integers.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hoang Duc Anh Nguyen",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
