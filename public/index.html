@@ -37,7 +37,7 @@
     </header>
 
     <div class="container mt-2">
-      <div class="row justify-content-center">
+      <div class="row justify-content-center align">
         <div class="col-12 col-sm-4 text-justify">
           <h2 class="text-center">Implements</h2>
           <p>
@@ -73,9 +73,9 @@
           </p>
           <p>
             After using BigInt approach, I think the best way to calculating
-            infinite value is using Mathematics.
+            infinite value is using school Mathematics. My second approach can
+            be found <b><a href="math.html">here</a></b>.
           </p>
-          
         </div>
         <div class="col-12 col-sm-8">
           <h2 class="text-center">Calculator</h2>
@@ -104,18 +104,18 @@
               <input
                 type="radio"
                 name="options"
-                value="1"
+                value="+"
                 autocomplete="off"
                 checked
               />
               <i class="fa fa-plus" aria-hidden="true"></i>
             </label>
             <label class="btn btn-warning">
-              <input type="radio" name="options" value="2" autocomplete="off" />
+              <input type="radio" name="options" value="-" autocomplete="off" />
               <i class="fa fa-minus" aria-hidden="true"></i>
             </label>
             <label class="btn btn-warning">
-              <input type="radio" name="options" value="3" autocomplete="off" />
+              <input type="radio" name="options" value="*" autocomplete="off" />
               <i class="fa fa-times" aria-hidden="true"></i>
             </label>
           </div>
@@ -160,22 +160,36 @@
             ></textarea>
           </div>
         </div>
-        <hr>
+      </div>
+      <hr class="mt-2" />
+      <div class="row justify-content-center">
         <div class="col-12">
-          <hr class="mt-2">
-          <h2 class="text-center mt-2">Calculation History</h2>
-          <table class="table table-striped mt-2">
+          <h2 class="text-center mt-2" id="history-header"></h2>
+        </div>
+        <div class="col-12 text-center">
+          <button type="button" class="btn btn-outline-danger" id="del-history">
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            id="save-history"
+          >
+            <i class="fa fa-save" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="col-12">
+          <table class="table table-striped mt-2" id="history-table">
             <thead class="thead-dark">
               <tr>
                 <th scope="col">#</th>
-                <th scope="col">1st Integer</th>
+                <th scope="col">First Integer</th>
                 <th scope="col">Op</th>
-                <th scope="col">2nd Integer</th>
+                <th scope="col">Second Integer</th>
                 <th scope="col">Result</th>
               </tr>
             </thead>
-            <tbody id="history">
-            </tbody>
+            <tbody id="history"></tbody>
           </table>
         </div>
       </div>
@@ -217,6 +231,40 @@
       </div>
     </div>
 
+    <!-- Alert modal -->
+    <div class="modal" tabindex="-1" id="alert-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Alert</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>You are about to delete your calculation history! Proceed?</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-danger" id="confirm-delete">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Script tags go here -->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -228,6 +276,9 @@
       integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/web-streams-polyfill@2.0.2/dist/ponyfill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/eligrey/Blob.js/Blob.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/streamsaver@2.0.3/StreamSaver.min.js"></script>
     <!-- Logic code goes here -->
     <script src="controller.js"></script>
   </body>

@@ -3,6 +3,8 @@ let oldValue = false;
 $(document).ready(function () {
   renderHistory();
   inputListener();
+  saveHistoryListener();
+  deleteHistoryListener();
 });
 
 function inputListener() {
@@ -39,7 +41,7 @@ function inputListener() {
 
   // When input change, press CALC will calc with new value
   // Otherwise, do nothing.
-  $("#first-input,#second-input").on("change", () => {
+  $('#first-input,#second-input,input[name="options"]').on("change", () => {
     oldValue = false;
   });
 
@@ -54,15 +56,15 @@ function inputListener() {
         let firstVal = BigInt($("#first-input").val());
         let secondVal = BigInt($("#second-input").val());
         switch (option) {
-          case "1":
+          case "+":
             // Adding here
             res = firstVal + secondVal;
             break;
-          case "2":
+          case "-":
             // Subtracting here
             res = firstVal - secondVal;
             break;
-          case "3":
+          case "*":
             // Multiplying here
             res = firstVal * secondVal;
             break;
@@ -72,7 +74,12 @@ function inputListener() {
 
         $("#result").val(res.toString());
         // Prepend last result to history table
-        renderLastResult(firstVal.toString(),option.toString(),secondVal.toString(),res.toString());
+        renderLastResult(
+          firstVal.toString(),
+          option.toString(),
+          secondVal.toString(),
+          res.toString()
+        );
         oldValue = true;
 
         // TODO - Add prev value to history (local storage).
@@ -100,29 +107,16 @@ function inputListener() {
 function renderHistory() {
   let oldHistory = JSON.parse(localStorage.getItem("history"));
   if (oldHistory === null) {
-    $(".table").toggleClass(".d-none");
+    $("#history-header").text("No Calculation History");
+    $("#history-table,#del-history,#save-history").addClass("d-none");
     return;
   }
-
+  $("#history-header").text("Calculation History");
   for (let i = 0; i < oldHistory.length; i++) {
-    let symb = "";
-    switch (oldHistory[i].op) {
-      case "1":
-        symb = "+";
-        break;
-      case "2":
-        symb = "-";
-        break;
-      case "3":
-        symb = "*";
-        break;
-      default:
-        break;
-    }
     let newRow = `<tr>
                     <th scope="row">${i + 1}</th>
                     <td class="text-break">${oldHistory[i].firstInt}</td>
-                    <td>${symb}</td>
+                    <td>${oldHistory[i].op}</td>
                     <td class="text-break">${oldHistory[i].secondInt}</td>
                     <td class="text-break">${oldHistory[i].result}</td>
                   </tr>`;
@@ -130,28 +124,76 @@ function renderHistory() {
   }
 }
 
-function renderLastResult(firstInt,op,secondInt,result) {
-  let symb = "";
+function renderLastResult(firstInt, op, secondInt, result) {
+  $("#history-table,#del-history,#save-history").removeClass("d-none");
   let currentIndex = $("#history").children().length;
-  switch (op) {
-    case "1":
-      symb = "+";
-      break;
-    case "2":
-      symb = "-";
-      break;
-    case "3":
-      symb = "*";
-      break;
-    default:
-      break;
-  }
+  $("#history-header").text("Calculation History");
   let newRow = `<tr>
-                    <th scope="row">${currentIndex+1}</th>
+                    <th scope="row">${currentIndex + 1}</th>
                     <td class="text-break">${firstInt}</td>
-                    <td>${symb}</td>
+                    <td>${op}</td>
                     <td class="text-break">${secondInt}</td>
                     <td class="text-break">${result}</td>
                   </tr>`;
   $("#history").prepend(newRow);
+}
+
+function saveHistoryListener() {
+  $("#save-history").on("click", async () => {
+    streamSaver.mitm = "./mitm.html";
+    console.log("saving");
+    let oldHistory = JSON.parse(localStorage.getItem("history")) || [];
+    // Convert Array Object to CSV
+    let csv = "firstInt,operator,secondInt,result\n" + oldHistory
+      .map(function (d) {
+        return JSON.stringify(Object.values(d));
+      })
+      .join("\n")
+      .replace(/(^\[)|(\]$)/gm, "");
+      console.log(typeof(csv));
+    const blob = new Blob([csv]);
+    const fileStream = streamSaver.createWriteStream("calculate-history.csv", {
+      size: blob.size, // Makes the percentage visiable in the download
+    });
+
+    // One quick alternetive way if you don't want the hole blob.js thing:
+    // const readableStream = new Response(
+    //   Blob || String || ArrayBuffer || ArrayBufferView
+    // ).body
+    const readableStream = blob.stream();
+
+    // more optimized pipe version
+    // (Safari may have pipeTo but it's useless without the WritableStream)
+    if (window.WritableStream && readableStream.pipeTo) {
+      await readableStream.pipeTo(fileStream);
+      return console.log("done writing");
+    }
+
+    // Write (pipe) manually
+    window.writer = fileStream.getWriter();
+
+    const reader = readableStream.getReader();
+    const pump = () =>
+      reader
+        .read()
+        .then((res) =>
+          res.done ? writer.close() : writer.write(res.value).then(pump)
+        );
+
+    pump();
+  });
+}
+
+function deleteHistoryListener() {
+ $("#del-history").on("click",()=>{
+  $("#alert-modal").modal("show");
+  // Confirm delete action
+  $("#confirm-delete").on("click",()=>{
+    $("#history-header").text("No Calculation History");
+    $("#history-table,#del-history,#save-history").addClass("d-none");
+    localStorage.removeItem("history");
+    $("#alert-modal").modal("hide");
+
+  });
+ });
 }
