@@ -14,25 +14,12 @@
       integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
       crossorigin="anonymous"
     />
-    <style>
-      .jumbotron {
-        padding: 20px;
-        margin: 0px auto;
-        background: #9575cd;
-        color: floralwhite;
-      }
-      /* Chrome, Safari, Edge, Opera */
-      input::-webkit-outer-spin-button,
-      input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
 
-      /* Firefox */
-      input[type="number"] {
-        -moz-appearance: textfield;
-      }
-    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="jumbotron">
@@ -51,8 +38,8 @@
 
     <div class="container mt-2">
       <div class="row justify-content-center">
-        <div class="col-12 col-sm-4">
-          <h2 class="header text-center">Implements</h2>
+        <div class="col-12 col-sm-4 text-justify">
+          <h2 class="text-center">Implements</h2>
           <p>
             Because
             <b
@@ -74,13 +61,35 @@
             type to extend the limitation.
           </p>
           <p>
-
+            Also, BigInt maybe a good choice for larger numbers but it still has
+            its limit. When I try to calculate with very large numbers, I have
+            to wait 15 seconds or maybe more. With 2 sample inputs, one has
+            181428 digits and the other has 721632 i got memory out of bound. My
+            understand about this is that BigInt still depend on other aspects
+            like <em>heap memory</em>, maximum size of other type like
+            <em>string, array, etc</em>. I can conclude that BigInt capability
+            maybe even more but due to other aspects, it can't calculate the
+            final result.
           </p>
+          <p>
+            After using BigInt approach, I think the best way to calculating
+            infinite value is using Mathematics.
+          </p>
+          
         </div>
         <div class="col-12 col-sm-8">
-          <h2 class="header text-center">Calculator</h2>
+          <h2 class="text-center">Calculator</h2>
           <div class="card mt-2">
-            <div class="card-header">Enter first integer</div>
+            <div class="card-header">
+              <h5 class="float-left">Enter first integer</h5>
+              <button
+                type="button"
+                class="close float-right"
+                aria-label="Clear input"
+              >
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+              </button>
+            </div>
             <textarea
               class="card-body form-control"
               aria-label="Enter first number"
@@ -99,20 +108,29 @@
                 autocomplete="off"
                 checked
               />
-              +
+              <i class="fa fa-plus" aria-hidden="true"></i>
             </label>
             <label class="btn btn-warning">
               <input type="radio" name="options" value="2" autocomplete="off" />
-              -
+              <i class="fa fa-minus" aria-hidden="true"></i>
             </label>
             <label class="btn btn-warning">
               <input type="radio" name="options" value="3" autocomplete="off" />
-              *
+              <i class="fa fa-times" aria-hidden="true"></i>
             </label>
           </div>
 
           <div class="card mt-2">
-            <div class="card-header">Enter second integer</div>
+            <div class="card-header">
+              <h5 class="float-left">Enter second integer</h5>
+              <button
+                type="button"
+                class="close float-right"
+                aria-label="Clear input"
+              >
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+              </button>
+            </div>
             <textarea
               class="card-body form-control"
               aria-label="Enter second number"
@@ -132,15 +150,33 @@
             </button>
           </div>
           <div class="card mt-2">
-            <div class="card-header">Result</div>
-            <input
-              class="form-control text-break"
+            <h5 class="card-header">Result</h5>
+            <textarea
+              class="form-control"
               id="result"
-              type="number"
-              placeholder="..."
+              type="text"
+              placeholder=""
               disabled
-            />
+            ></textarea>
           </div>
+        </div>
+        <hr>
+        <div class="col-12">
+          <hr class="mt-2">
+          <h2 class="text-center mt-2">Calculation History</h2>
+          <table class="table table-striped mt-2">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">1st Integer</th>
+                <th scope="col">Op</th>
+                <th scope="col">2nd Integer</th>
+                <th scope="col">Result</th>
+              </tr>
+            </thead>
+            <tbody id="history">
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -156,9 +192,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="modelLabel">
-              Missing one or more parameters
-            </h5>
+            <h5 class="modal-title" id="modelLabel">Error!</h5>
             <button
               type="button"
               class="close"
@@ -170,7 +204,14 @@
           </div>
           <div class="modal-body">Please check your input and try again!</div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">OK</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-toggle="modal"
+              data-target="#error-modal"
+            >
+              OK
+            </button>
           </div>
         </div>
       </div>
@@ -187,51 +228,7 @@
       integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
       crossorigin="anonymous"
     ></script>
-    <script>
-      $("#clear").on("click", () => {
-        $("#first-input,#second-input,#result").val("");
-      });
-
-      $("#first-input,#second-input").keypress(function (e) {
-        var a = [];
-        var k = e.which;
-
-        for (i = 48; i < 58; i++) a.push(i);
-
-        if (!(a.indexOf(k) >= 0)) e.preventDefault();
-      });
-
-      $("#calc").on("click", () => {
-        if ($("#first-input").val() !== "" && $("#second-input").val() !== "") {
-          // Start calculate...
-
-          // Get selected operator
-          let option = $('input[name="options"]:checked').val();
-          let res = "";
-          let firstVal = BigInt($("#first-input").val());
-          let secondVal = BigInt($("#second-input").val());
-          switch (option) {
-            case "1":
-              // Adding here
-              res = firstVal + secondVal;
-              break;
-            case "2":
-              // Subtracting here
-              res = firstVal - secondVal;
-              break;
-            case "3":
-              // Multiplying here
-              res = firstVal * secondVal;
-              break;
-            default:
-              break;
-          }
-          $("#result").val(res.toString());
-        } else {
-          // Notify...
-          $("#error-modal").modal("show");
-        }
-      });
-    </script>
+    <!-- Logic code goes here -->
+    <script src="controller.js"></script>
   </body>
 </html>
