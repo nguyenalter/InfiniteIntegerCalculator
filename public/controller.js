@@ -1,6 +1,8 @@
 let oldValue = false;
 
 $(document).ready(function () {
+  // Trigger tooltip
+  $('[data-toggle="tooltip"]').tooltip();   
   renderHistory();
   inputListener();
   saveHistoryListener();
@@ -11,11 +13,21 @@ function inputListener() {
   // Clear function to clean up input
   $("#clear").on("click", () => {
     $("#first-input,#second-input,#result").val("");
+    oldValue = false;
   });
 
-  $(".float-right").on("click", function () {
-    // Clear first or second input
+  // Clear first or second input
+  $(".clear-input").on("click", function () {
     $(this).parent().next().val("");
+    oldValue = false;
+  });
+
+  // Swap two integers
+  $("#swap").on("click", function () {
+    let temp = $("#first-input").val();
+    $("#first-input").val($("#second-input").val());
+    $("#second-input").val(temp);
+    oldValue = false;
   });
 
   // Input only accepts [0-9+-]
@@ -144,13 +156,15 @@ function saveHistoryListener() {
     console.log("saving");
     let oldHistory = JSON.parse(localStorage.getItem("history")) || [];
     // Convert Array Object to CSV
-    let csv = "firstInt,operator,secondInt,result\n" + oldHistory
-      .map(function (d) {
-        return JSON.stringify(Object.values(d));
-      })
-      .join("\n")
-      .replace(/(^\[)|(\]$)/gm, "");
-      console.log(typeof(csv));
+    let csv =
+      "firstInt,operator,secondInt,result\n" +
+      oldHistory
+        .map(function (d) {
+          return JSON.stringify(Object.values(d));
+        })
+        .join("\n")
+        .replace(/(^\[)|(\]$)/gm, "");
+    console.log(typeof csv);
     const blob = new Blob([csv]);
     const fileStream = streamSaver.createWriteStream("calculate-history.csv", {
       size: blob.size, // Makes the percentage visiable in the download
@@ -185,15 +199,23 @@ function saveHistoryListener() {
 }
 
 function deleteHistoryListener() {
- $("#del-history").on("click",()=>{
-  $("#alert-modal").modal("show");
-  // Confirm delete action
-  $("#confirm-delete").on("click",()=>{
-    $("#history-header").text("No Calculation History");
-    $("#history-table,#del-history,#save-history").addClass("d-none");
-    localStorage.removeItem("history");
-    $("#alert-modal").modal("hide");
+  $("#del-history").on("click", () => {
+    $("#alert-modal").modal("show");
+    // Confirm delete action
+    $("#confirm-delete").on("click", () => {
+      // No old value in history
+      oldValue = false;
 
+      // Render history header
+      $("#history-header").text("No Calculation History");
+      // Hide history table
+      $("#history-table,#del-history,#save-history").addClass("d-none");
+      // Delete rows value
+      $("#history").empty();
+      // Clear local storage
+      localStorage.removeItem("history");
+      // Hide modal
+      $("#alert-modal").modal("hide");
+    });
   });
- });
 }

@@ -28,7 +28,7 @@
           <div class="col-12">
             <h1 class="text-center">Infinite Integer Calculator</h1>
             <p class="lead text-center">
-              Simple infinite integer calculator to adding, subtracting or
+              Simple infinite integer calculator for adding, subtracting or
               multiplying two infinite integers.
             </p>
           </div>
@@ -39,7 +39,7 @@
     <div class="container mt-2">
       <div class="row justify-content-center align">
         <div class="col-12 col-sm-4 text-justify">
-          <h2 class="text-center">Implements</h2>
+          <h2 class="text-center">Implement</h2>
           <p>
             Because
             <b
@@ -63,18 +63,20 @@
           <p>
             Also, BigInt maybe a good choice for larger numbers but it still has
             its limit. When I try to calculate with very large numbers, I have
-            to wait 15 seconds or maybe more. With 2 sample inputs, one has
-            181428 digits and the other has 721632 i got memory out of bound. My
-            understand about this is that BigInt still depend on other aspects
-            like <em>heap memory</em>, maximum size of other type like
-            <em>string, array, etc</em>. I can conclude that BigInt capability
-            maybe even more but due to other aspects, it can't calculate the
-            final result.
+            to wait 15 seconds or maybe more. With 2 sample numbers, one has a
+            length of 181428 and the other has 721632 i got memory out of bound.
+            My understand about this is that, BigInt still depend on other
+            aspects like <em>heap memory</em> or
+            <em>maximum memory allcation on each browser</em>, maximum size of
+            other build-in type like <em>string, array, etc</em>. I can conclude
+            that BigInt capability maybe even more but due to other aspects, it
+            may not be able calculate the final result.
           </p>
           <p>
             After using BigInt approach, I think the best way to calculating
-            infinite value is using school Mathematics. My second approach can
-            be found <b><a href="math.html">here</a></b>.
+            infinite value is using school mathematics. My second approach can
+            be found <b><a href="math.html">here</a></b
+            >.
           </p>
         </div>
         <div class="col-12 col-sm-8">
@@ -84,8 +86,11 @@
               <h5 class="float-left">Enter first integer</h5>
               <button
                 type="button"
-                class="close float-right"
+                class="close float-right clear-input"
                 aria-label="Clear input"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Clear your input"
               >
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
               </button>
@@ -125,8 +130,11 @@
               <h5 class="float-left">Enter second integer</h5>
               <button
                 type="button"
-                class="close float-right"
+                class="close float-right clear-input"
                 aria-label="Clear input"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Clear your input"
               >
                 <i class="fa fa-trash-o" aria-hidden="true"></i>
               </button>
@@ -144,6 +152,9 @@
           >
             <button type="button" class="btn btn-danger" id="clear">
               CLEAR
+            </button>
+            <button type="button" class="btn btn-primary" id="swap">
+              SWAP
             </button>
             <button type="button" class="btn btn-success" id="calc">
               CALC
@@ -167,13 +178,23 @@
           <h2 class="text-center mt-2" id="history-header"></h2>
         </div>
         <div class="col-12 text-center">
-          <button type="button" class="btn btn-outline-danger" id="del-history">
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            id="del-history"
+            data-toggle="tooltip"
+            data-placement="left"
+            title="Delete your history"
+          >
             <i class="fa fa-trash-o" aria-hidden="true"></i>
           </button>
           <button
             type="button"
             class="btn btn-outline-primary"
             id="save-history"
+            data-toggle="tooltip"
+            data-placement="right"
+            title="Save your history to csv file"
           >
             <i class="fa fa-save" aria-hidden="true"></i>
           </button>
