@@ -4,11 +4,12 @@ let oldValue = false;
 
 $(document).ready(function () {
   // Trigger tooltip
-  $('[data-toggle="tooltip"]').tooltip();
-  renderHistory();
-  inputListener();
-  saveHistoryListener();
-  deleteHistoryListener();
+  // $('[data-toggle="tooltip"]').tooltip();
+  // renderHistory();
+  // inputListener();
+  // saveHistoryListener();
+  // deleteHistoryListener();
+  myFeature.init();
 });
 
 function inputListener() {
@@ -49,7 +50,7 @@ function inputListener() {
     // 43 is "+", 45 is "-" and 48-58 equal to 0-9 in ASCII.
     a.push(43);
     a.push(45);
-    for (i = 48; i < 58; i++) a.push(i);
+    for (let i = 48; i < 58; i++) a.push(i);
     if (!(a.indexOf(k) >= 0)) e.preventDefault();
   });
 
@@ -236,19 +237,18 @@ let myFeature = {
   swapAction: $("#swap"),
   calcAction: $("#calc"),
   operatorOptions: $('input[name="options"]'),
-  selectedOperatorOption: $('input[name="options"]:checked'),
   errorModal: $("#error-modal"),
   errorModalBody: $("#error-modal-body"),
   alertModal: $("#alert-modal"),
-  modalBody: $(".modal-body"),
   historyHeader: $("#history-header"),
   historyTable: $("#history-table"),
-  historyTableBody: $("history"),
+  historyTableBody: $("#history"),
   delHistoryAction: $("#del-history"),
   saveHistoryAction: $("#save-history"),
-  confirmDeleteAction: $("confirm-delete"),
+  confirmDeleteAction: $("#confirm-delete"),
 
   // Getter and setter methods
+  getSelectedOperator: () => $('input[name="options"]:checked').val(),
   getFirstInput: () => myFeature.firstInput.val(),
   setFirstInput: (value) => myFeature.firstInput.val(value),
   getSecondInput: () => myFeature.secondInput.val(),
@@ -262,16 +262,16 @@ let myFeature = {
 
   init: function () {
     // Enable tooltip
-    $('[data-toggle="tooltip"]').tooltip(), myFeature.eventListener();
+    $('[data-toggle="tooltip"]').tooltip();
     // Render history table first
     myFeature.renderHistory();
     // Add event listeners
-    myFeature.eventListener();
-    myFeature.deleteHistoryListener();
+    myFeature.inputListener();
     myFeature.saveHistoryListener();
+    myFeature.deleteHistoryListener();
   },
 
-  eventListener: function () {
+  inputListener: function () {
     // Clear function to clean up input and output
     myFeature.clearAllAction.on("click", () => {
       myFeature.setFirstInput("");
@@ -301,7 +301,7 @@ let myFeature = {
         let k = e.which;
         a.push(43);
         a.push(45);
-        for (i = 48; i < 58; i++) a.push(i);
+        for (let i = 48; i < 58; i++) a.push(i);
         if (!(a.indexOf(k) >= 0)) e.preventDefault();
       });
     });
@@ -311,7 +311,7 @@ let myFeature = {
       (myFeature.firstInput, myFeature.secondInput, myFeature.operatorOptions),
     ].map((selector) => {
       selector.on("change", () => {
-        oldValue = false;
+        myFeature.keepOldResult = false;
       });
     });
 
@@ -321,9 +321,9 @@ let myFeature = {
         myFeature.getSecondInput() !== ""
       ) {
         // Start calculate...
-        if (oldValue) return;
+        if (myFeature.keepOldResult) return;
         // Get selected operator
-        let option = myFeature.selectedOperatorOption.val();
+        let option = myFeature.getSelectedOperator();
         let res = "";
         try {
           let firstVal = BigInt(myFeature.getFirstInput());
@@ -353,7 +353,7 @@ let myFeature = {
             secondVal.toString(),
             res.toString()
           );
-          oldValue = true;
+          myFeature.keepOldResult = true;
 
           let exp = {
             firstInt: firstVal.toString(),
@@ -480,7 +480,7 @@ let myFeature = {
       // Confirm delete action
       myFeature.confirmDeleteAction.on("click", () => {
         // No old value in history
-        oldValue = false;
+        myFeature.keepOldResult = false;
         // Render history header
         myFeature.historyHeader.text("No Calculation History");
         // Hide history table
