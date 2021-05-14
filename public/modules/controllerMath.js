@@ -179,6 +179,7 @@ let myFeature = {
                 }
               } else if (firstVal[0] == "-") {
                 // result = - (firstVal + secondVal)
+                firstVal = firstVal.substr(1);
                 res = "-" + mathMethod.findSum(firstVal, secondVal);
               } else if (secondVal[0] == "-") {
                 // result = firstVal + secondVal
