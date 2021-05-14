@@ -10,6 +10,7 @@ let myFeature = {
   // Indicate whether should CALC action calculate if nothing changes.
   keepOldResult: false,
   // JQuery Selectors
+  timer: $("#timer"),
   clearAllAction: $("#clear"),
   clearEachAction: $(".clear-input"),
   firstInput: $("#first-input"),
@@ -109,6 +110,8 @@ let myFeature = {
         let option = myFeature.getSelectedOperator();
         let res = "";
         try {
+          // Start timer
+          let t0 = performance.now();
           let firstVal = BigInt(myFeature.getFirstInput());
           let secondVal = BigInt(myFeature.getSecondInput());
           switch (option) {
@@ -127,8 +130,14 @@ let myFeature = {
             default:
               break;
           }
+          // End timer
+          let t1 = performance.now();
           // Print result
           myFeature.setResultOutput(res.toString());
+
+          // Set execution time
+          myFeature.timer.text(`execution time: ${(t1 - t0) / 1000} seconds`);
+
           // Prepend last result to history table
           myFeature.renderLastResult(
             firstVal.toString(),

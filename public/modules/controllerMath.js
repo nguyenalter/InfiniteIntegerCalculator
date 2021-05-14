@@ -11,6 +11,7 @@ let myFeature = {
   // Indicate whether should CALC action calculate if nothing changes.
   keepOldResult: false,
   // JQuery Selectors
+  timer: $("#timer"),
   clearAllAction: $("#clear"),
   clearEachAction: $(".clear-input"),
   firstInput: $("#first-input"),
@@ -121,132 +122,69 @@ let myFeature = {
         let option = myFeature.getSelectedOperator();
         let res = "";
         try {
+          // Start timer
+          let t0 = performance.now();
           // Remove "+" in front of input if needed
           if (firstVal[0] == "+") firstVal = firstVal.substr(1);
           if (secondVal[0] == "+") secondVal = secondVal.substr(1);
 
-          switch (option) {
-            case "+":
-              // Adding here
-              if (firstVal[0] == "-" && secondVal[0] == "-") {
-                // Remove unary op
-                firstVal = firstVal.substr(1);
-                secondVal = secondVal.substr(1);
-                // result = - (firstVal + secondVal)
-                res = "-" + mathMethod.findSum(firstVal, secondVal);
-              } else if (firstVal[0] == "-") {
-                // This means result = secondVal - firstVal
-                // Remove unary op "-"
-                firstVal = firstVal.substr(1);
-                // If secondVal < firstVal, result = - (firstVal - secondVal)
-                if (mathMethod.isSmaller(secondVal, firstVal)) {
-                  res = "-" + mathMethod.findDifference(firstVal, secondVal);
-                } else {
-                  // If secondVal >= firstVal, result = secondVal - firstVal
-                  res = mathMethod.findDifference(secondVal, firstVal);
-                }
-              } else if (secondVal[0] == "-") {
-                // This means result = firstVal - secondVal
-                // Remove unary op "-"
-                secondVal = secondVal.substr(1);
-                // If firstVal < secondVal, result = - (secondVal - firstVal)
-                if (mathMethod.isSmaller(firstVal, secondVal)) {
-                  res = "-" + mathMethod.findDifference(secondVal, firstVal);
-                } else {
-                  // If firstVal >= secondVal, result = firstVal - secondVal
-                  res = mathMethod.findDifference(firstVal, secondVal);
-                }
-              } else {
-                // Normal sum, result = firstVal + secondVal
-                res = mathMethod.findSum(firstVal, secondVal);
-              }
+          // Send expression to server.
+          $.ajax({
+            url: "/calculator",
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({
+              firstVal: firstVal,
+              secondVal: secondVal,
+              option: option,
+            }),
+          })
+            .done(function (response) {
+              // Get result from server
+              res = response.result;
 
-              break;
-            case "-":
-              // Subtracting here
-              // result = secondVal - firstVal
-              if (firstVal[0] == "-" && secondVal[0] == "-") {
-                // Remove unary op "-"
-                firstVal = firstVal.substr(1);
-                secondVal = secondVal.substr(1);
+              // End timer
+              let t1 = performance.now();
+              // Remove leading zero
 
-                // If secondVal < firstVal, result = - (firstVal - secondVal)
-                if (mathMethod.isSmaller(secondVal, firstVal)) {
-                  res = "-" + mathMethod.findDifference(firstVal, secondVal);
-                } else {
-                  // If secondVal >= firstVal, result = secondVal - firstVal
-                  res = mathMethod.findDifference(secondVal, firstVal);
-                }
-              } else if (firstVal[0] == "-") {
-                // result = - (firstVal + secondVal)
-                firstVal = firstVal.substr(1);
-                res = "-" + mathMethod.findSum(firstVal, secondVal);
-              } else if (secondVal[0] == "-") {
-                // result = firstVal + secondVal
-                secondVal = secondVal.substr(1);
-                res = mathMethod.findSum(firstVal, secondVal);
-              } else {
-                // result = firstVal - secondVal
-                // If firstVal < secondVal, result = - (secondVal - firstVal)
-                if (mathMethod.isSmaller(firstVal, secondVal)) {
-                  res = "-" + mathMethod.findDifference(secondVal, firstVal);
-                } else {
-                  // If firstVal >= secondVal, result = firstVal - secondVal
-                  res = mathMethod.findDifference(firstVal, secondVal);
-                }
-              }
-              break;
-            case "*":
-              // Multiplying here
-              if (firstVal[0] == "-" && secondVal[0] == "-") {
-                // Remove unary op
-                firstVal = firstVal.substr(1);
-                secondVal = secondVal.substr(1);
-                // Normal multiplying
-                res = mathMethod.findProduct(firstVal, secondVal);
-              } else if (firstVal[0] == "-") {
-                // Remove unary op
-                firstVal = firstVal.substr(1);
-                // Add unary op later
-                res = "-" + mathMethod.findProduct(firstVal, secondVal);
-              } else if (secondVal[0] == "-") {
-                // Remove unary op
-                secondVal = secondVal.substr(1);
-                // Add unary op later
-                res = "-" + mathMethod.findProduct(firstVal, secondVal);
-              } else {
-                // Normal product, result = firstVal * secondVal
-                res = mathMethod.findProduct(firstVal, secondVal);
-              }
-              break;
-            default:
-              break;
-          }
-          // Remove leading zero
-          res = mathMethod.removeLeadingZero(res);
+              res = mathMethod.removeLeadingZero(res);
 
-          // Print result
-          myFeature.setResultOutput(res);
-          // Prepend last result to history table
-          myFeature.renderLastResult(
-            savedFirstVal,
-            option,
-            savedSecondVal,
-            res
-          );
-          // Set old result state to true
-          myFeature.keepOldResult = true;
+              // Print result
+              myFeature.setResultOutput(res);
+              // Prepend last result to history table
 
-          // Add latest calculation to local storage
-          let exp = {
-            firstInt: savedFirstVal,
-            op: option,
-            secondInt: savedSecondVal,
-            result: res,
-          };
-          let oldHistory = myFeature.getLocalStorageHistory();
-          oldHistory.push(exp);
-          myFeature.setLocalStorageHistory(oldHistory);
+              // Set execution time
+              myFeature.timer.text(
+                `execution time: ${(t1 - t0) / 1000} seconds`
+              );
+
+              myFeature.renderLastResult(
+                savedFirstVal,
+                option,
+                savedSecondVal,
+                res
+              );
+              // Set old result state to true
+              myFeature.keepOldResult = true;
+
+              // Add latest calculation to local storage
+              let exp = {
+                firstInt: savedFirstVal,
+                op: option,
+                secondInt: savedSecondVal,
+                result: res,
+              };
+              let oldHistory = myFeature.getLocalStorageHistory();
+              oldHistory.push(exp);
+              myFeature.setLocalStorageHistory(oldHistory);
+            })
+            .fail((error) => {
+              console.log(error);
+              // Notify error!
+              myFeature.errorModalBody.text(error.toString());
+              myFeature.errorModal.modal("show");
+            });
         } catch (error) {
           // Notify error!
           myFeature.errorModalBody.text(error.toString());
@@ -254,7 +192,7 @@ let myFeature = {
         }
       } else {
         // Notify error!
-        myFeature.errorModalBody.text("Missing one or more parameters!");
+        myFeature.errorModalBody.text("Please double check your input");
         myFeature.errorModal.modal("show");
       }
     });
@@ -388,5 +326,3 @@ let myFeature = {
     return myFeature.regex.test(input1) && myFeature.regex.test(input2);
   },
 };
-
-
