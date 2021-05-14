@@ -48,7 +48,7 @@
                 >Number</a
               ></b
             >
-            type only handle numbers from - (2<sup>53</sup> - 1) to 2<sup
+            type only handles numbers from - (2<sup>53</sup> - 1) to 2<sup
               >53</sup
             >
             - 1 so I decide to use
@@ -61,20 +61,19 @@
             type to extend the limitation.
           </p>
           <p>
-            Also, BigInt maybe a good choice for larger numbers but it still has
+            Also, BigInt is a good choice for larger numbers but it still has
             its limit. When I try to calculate with very large numbers, I have
-            to wait 15 seconds or maybe more. With 2 sample numbers, one has a
-            length of 181428 and the other has 721632 i got memory out of bound.
-            My understand about this is that, BigInt still depend on other
+            to wait 15 seconds or more. With 2 sample numbers, one has a
+            length of 181428 and the other has 721632 I got memory out of bound.
+            Mine understand about this is that BigInt still depends on other
             aspects like <em>heap memory</em> or
-            <em>maximum memory allcation on each browser</em>, maximum size of
-            other build-in type like <em>string, array, etc</em>. I can conclude
+            <em>maximum memory allocation on each browser</em>, maximum size of
+            other build-in types like <em>string, array, etc</em>. I can conclude
             that BigInt capability maybe even more but due to other aspects, it
-            may not be able calculate the final result.
+            may not be able to calculate the final result.
           </p>
           <p>
-            After using BigInt approach, I found another way to calculating
-            infinite value is using school mathematics. My second approach can
+            Besides BigInt's limitation, it is the best way to calculate small inputs. For larger and <em>infinite</em> ones I would prefer using School Mathematics Approach. My second approach can
             be found <b><a href="math.html">here</a></b
             >.
           </p>

@@ -45,7 +45,7 @@
             subtract or multiply using school mathematics.
           </p>
           <p>
-            Instead of using BigInt type, I use string for doing the math. In
+            Instead of using BigInt type, I have used string for doing the math. In
             the past, no maximum string length was specified.
             <b
               ><a
@@ -61,7 +61,9 @@
             bound of the calculator.
           </p>
           <p>
-            In conclusion, this calculating method is probably better than the
+            The calculating process depends on the server that does the math and sends back the result. The maximum memory for <b><a href="https://devcenter.heroku.com/articles/node-memory-use#heroku-memory-limits">Heroku Free Nodejs Server</a></b> is 512 MB.
+          <p>
+            In conclusion, this calculating method is clearly better than the
             <b><a href="index.html">BigInt approach</a></b
             >. We are only limited by the <em>maximum bound</em> of the data
             types storing our inputs. Although it is not the infinite calculator
@@ -69,7 +71,7 @@
               >53</sup
             >
             - 1 digits, give it a try and let find out the result. Note that it
-            may take some time to calculate for very large input.
+            may take some time to calculate for these large inputs.
           </p>
         </div>
         <div class="col-12 col-sm-8">
@@ -298,7 +300,6 @@
     <script src="https://cdn.jsdelivr.net/gh/eligrey/Blob.js/Blob.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/streamsaver@2.0.3/StreamSaver.min.js"></script>
     <!-- Logic code goes here -->
-    <script src="./modules/math.js"></script>
     <script src="./modules/controllerMath.js"></script>
   </body>
 </html>

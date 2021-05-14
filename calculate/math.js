@@ -1,11 +1,11 @@
-/* This module contains 5 methods:
+/* This module contains 4 methods:
 - op1, op2 is in string type and has pattern [0-9]+.
 - str is in string type and has pattern ^[-+]?[0-9]+ .
 + findSum(op1,op2) return (op1 + op2) in string type
 + findDifference(op1,op2) return (op1 - op2) in string type (assumed that op1 >= op2).
 + findProduct(op1,op2) return (op1 * op2) in string type
 + isSmaller(op1,op2) return true if op1 is smaller than op2; otherwise, it returns false.
-+ removeLeadingZero(str) return a new string (included unary op "+" or "-") with no leading zero.
+
 */
 let mathMethod = {
     // This function only finds the sum of two POSITIVE INTEGERS
@@ -174,14 +174,7 @@ let mathMethod = {
   
       return s;
     },
-    removeLeadingZero: function (str) {
-      let temp = "";
-      if (str[0] == "-" || str[0] == "+") {
-        temp = str[0];
-        str = str.substr(1);
-      }
-      return temp + str.replace(/^0+/, "") || "0";
-    },
+    
   };
 
   module.exports = mathMethod;

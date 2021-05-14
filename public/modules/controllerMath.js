@@ -103,8 +103,8 @@ let myFeature = {
     // Start calculate the result
     myFeature.calcAction.on("click", () => {
       // Get input and remove all leading zeros.
-      let firstVal = mathMethod.removeLeadingZero(myFeature.getFirstInput());
-      let secondVal = mathMethod.removeLeadingZero(myFeature.getSecondInput());
+      let firstVal = myFeature.getFirstInput();
+      let secondVal = myFeature.getSecondInput();
 
       // Save original input for storing and rendering later
       let savedFirstVal = firstVal;
@@ -124,6 +124,11 @@ let myFeature = {
         try {
           // Start timer
           let t0 = performance.now();
+
+          // Get input and remove all leading zeros.
+          firstVal = myFeature.removeLeadingZero(firstVal);
+          secondVal = myFeature.removeLeadingZero(secondVal);
+
           // Remove "+" in front of input if needed
           if (firstVal[0] == "+") firstVal = firstVal.substr(1);
           if (secondVal[0] == "+") secondVal = secondVal.substr(1);
@@ -148,7 +153,7 @@ let myFeature = {
               let t1 = performance.now();
               // Remove leading zero
 
-              res = mathMethod.removeLeadingZero(res);
+              res = myFeature.removeLeadingZero(res);
 
               // Print result
               myFeature.setResultOutput(res);
@@ -184,16 +189,19 @@ let myFeature = {
               // Notify error!
               myFeature.errorModalBody.text(error.toString());
               myFeature.errorModal.modal("show");
+              return;
             });
         } catch (error) {
           // Notify error!
           myFeature.errorModalBody.text(error.toString());
           myFeature.errorModal.modal("show");
+          return;
         }
       } else {
         // Notify error!
         myFeature.errorModalBody.text("Please double check your input");
         myFeature.errorModal.modal("show");
+        return;
       }
     });
   },
@@ -324,5 +332,15 @@ let myFeature = {
 
   checkPattern: function (input1, input2) {
     return myFeature.regex.test(input1) && myFeature.regex.test(input2);
+  },
+
+  // return a new string (included unary op "+" or "-") with no leading zero.
+  removeLeadingZero: function (str) {
+    let temp = "";
+    if (str[0] == "-" || str[0] == "+") {
+      temp = str[0];
+      str = str.substr(1);
+    }
+    return temp + str.replace(/^0+/, "") || "0";
   },
 };
