@@ -98,12 +98,12 @@ let myFeature = {
       });
     });
 
+    // Start calculate the result
     myFeature.calcAction.on("click", () => {
       if (
         myFeature.getFirstInput() !== "" &&
         myFeature.getSecondInput() !== ""
       ) {
-        // Start calculate...
         if (myFeature.keepOldResult) return;
         // Get selected operator
         let option = myFeature.getSelectedOperator();
@@ -136,8 +136,10 @@ let myFeature = {
             secondVal.toString(),
             res.toString()
           );
+          // Set old result state to true
           myFeature.keepOldResult = true;
 
+          // Add latest calculation to local storage
           let exp = {
             firstInt: firstVal.toString(),
             op: option,
@@ -208,7 +210,7 @@ let myFeature = {
 
   saveHistoryListener: function () {
     myFeature.saveHistoryAction.on("click", async () => {
-      streamSaver.mitm = "./mitm.html";
+      streamSaver.mitm = "../mitm.html";
       console.log("saving");
       let oldHistory = myFeature.getLocalStorageHistory();
       // Convert Array Object to CSV

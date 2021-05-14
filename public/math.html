@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Infinite Integer Calculator</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="jumbotron">
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-12">
+            <h1 class="text-center">Infinite Integer Calculator</h1>
+            <p class="lead text-center">
+              Adding, subtracting or multiplying two infinite integers using
+              school mathematics.
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container mt-2">
+      <div class="row justify-content-center align">
+        <div class="col-12 col-sm-4 text-justify">
+          <h2 class="text-center">Implement</h2>
+          <p>
+            This is my second approach to do the math. The main idea is to add,
+            subtract or multiply using school mathematics.
+          </p>
+          <p>
+            Instead of using BigInt type, I use string for doing the math. In
+            the past, no maximum string length was specified.
+            <b
+              ><a
+                href="https://262.ecma-international.org/7.0/#sec-ecmascript-language-types-string-type"
+                >ECMAScript 2016 (ed. 7)</a
+              ></b
+            >
+
+            established a maximum string length of 2<sup>53</sup> - 1 elements.
+            Basically, if there is any input or result that
+            <em>overflow the maximum length of string</em>, the calculator
+            probably can't handle it. In other words, it is truly the maximum
+            bound of the calculator.
+          </p>
+          <p>
+            In conclusion, this calculating method is probably better than the
+            <b><a href="index.html">BigInt approach</a></b
+            >. We are only limited by the <em>maximum bound</em> of the data
+            types storing our inputs. Although it is not the infinite calculator
+            as we expected, if you wish to enter a number having more than 2<sup
+              >53</sup
+            >
+            - 1 digits, give it a try and let find out the result. Note that it
+            may take some time to calculate for very large input.
+          </p>
+        </div>
+        <div class="col-12 col-sm-8">
+          <h2 class="text-center">Calculator</h2>
+          <div class="card mt-2">
+            <div class="card-header">
+              <h5 class="float-left">Enter first integer</h5>
+              <button
+                type="button"
+                class="close float-right clear-input"
+                aria-label="Clear input"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Clear your input"
+              >
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+              </button>
+            </div>
+            <textarea
+              class="card-body form-control"
+              aria-label="Enter first number"
+              id="first-input"
+            ></textarea>
+          </div>
+          <div
+            class="btn-group btn-group-toggle btn-block mt-2"
+            data-toggle="buttons"
+          >
+            <label class="btn btn-warning active">
+              <input
+                type="radio"
+                name="options"
+                value="+"
+                autocomplete="off"
+                checked
+              />
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </label>
+            <label class="btn btn-warning">
+              <input type="radio" name="options" value="-" autocomplete="off" />
+              <i class="fa fa-minus" aria-hidden="true"></i>
+            </label>
+            <label class="btn btn-warning">
+              <input type="radio" name="options" value="*" autocomplete="off" />
+              <i class="fa fa-times" aria-hidden="true"></i>
+            </label>
+          </div>
+
+          <div class="card mt-2">
+            <div class="card-header">
+              <h5 class="float-left">Enter second integer</h5>
+              <button
+                type="button"
+                class="close float-right clear-input"
+                aria-label="Clear input"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Clear your input"
+              >
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+              </button>
+            </div>
+            <textarea
+              class="card-body form-control"
+              aria-label="Enter second number"
+              id="second-input"
+            ></textarea>
+          </div>
+          <div
+            class="btn-group btn-block mt-2"
+            role="group"
+            aria-label="Select action"
+          >
+            <button type="button" class="btn btn-danger" id="clear">
+              CLEAR
+            </button>
+            <button type="button" class="btn btn-primary" id="swap">
+              SWAP
+            </button>
+            <button type="button" class="btn btn-success" id="calc">
+              CALC
+            </button>
+          </div>
+          <div class="card mt-2">
+            <h5 class="card-header">Result</h5>
+            <textarea
+              class="form-control"
+              id="result"
+              type="text"
+              placeholder=""
+              disabled
+            ></textarea>
+          </div>
+        </div>
+      </div>
+      <hr class="mt-2" />
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <h2 class="text-center mt-2" id="history-header"></h2>
+        </div>
+        <div class="col-12 text-center">
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            id="del-history"
+            data-toggle="tooltip"
+            data-placement="left"
+            title="Delete your history"
+          >
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            id="save-history"
+            data-toggle="tooltip"
+            data-placement="right"
+            title="Save your history to csv file"
+          >
+            <i class="fa fa-save" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="col-12">
+          <table class="table table-striped mt-2" id="history-table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">First Integer</th>
+                <th scope="col">Op</th>
+                <th scope="col">Second Integer</th>
+                <th scope="col">Result</th>
+              </tr>
+            </thead>
+            <tbody id="history"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for display-->
+    <div
+      class="modal fade"
+      id="error-modal"
+      tabindex="-1"
+      aria-labelledby="modelLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modelLabel">Error!</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="error-modal-body">
+            Please check your input and try again!
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-toggle="modal"
+              data-target="#error-modal"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert modal -->
+    <div class="modal" tabindex="-1" id="alert-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Alert</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>You are about to delete your calculation history! Proceed?</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-danger" id="confirm-delete">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script tags go here -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/web-streams-polyfill@2.0.2/dist/ponyfill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/eligrey/Blob.js/Blob.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/streamsaver@2.0.3/StreamSaver.min.js"></script>
+    <!-- Logic code goes here -->
+    <script src="./modules/math.js"></script>
+    <script src="./modules/controllerMath.js"></script>
+  </body>
+</html>
