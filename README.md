@@ -4,12 +4,11 @@ Infinite Integer Calculator that using both BigInt and Mathematics approaches.
 
 ## What is BigInt type?
 
-The build-in object to represent number larger than [Number.MAX_SAFE_INTEGER](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER).
+The build-in object to represent number larger than [Number.MAX_SAFE_INTEGER].
 
 ## What is Mathematics Approach?
 
-School Mathematics teaches us how to adding, subtracting or multiplying by traversing both strings from end, one by one in order to add/subtract/multiply digits and keep track of carry.
-With this method, it is effective to calculate because we only have to handle operations in a single digit. The real problems is the computation time.
+School Mathematics teaches us how to adding, subtracting or multiplying by traversing both strings from end, one by one in order to add/subtract/multiply digits and keep track of carry. With this method, it is effective to calculate because we only have to handle operations in a single digit. The real problems is the computation time.
 
 ## Validate Input
 
@@ -17,7 +16,7 @@ Input may start with an unary op like "+" or "-" and following by many digits. A
 
 ## Features
 
-The calculator can handle. In addition, it has some utilities to view calculation history, delete it or even save it locally.
+The calculator can handle very large inputs. In addition, it has some utilities to view calculation history, delete it or even save it locally.
 
 ## Demo
 
@@ -36,7 +35,8 @@ Calculator uses a number of open source projects:
 - [custom Blob] - a custom Blob instead of default one
 
 
-[//]:
+#  
+   [Number.MAX_SAFE_INTEGER]: <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/MAX_SAFE_INTEGER>
    [Bootstrap]: <https://getbootstrap.com/docs/4.6>
    [Node.js]: <https://nodejs.org>
    [Express]: <http://daringfireball.net>
