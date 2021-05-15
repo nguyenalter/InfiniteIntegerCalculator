@@ -14,6 +14,10 @@ app.get("/", (req,res) => {
     res.sendFile(path.join(__dirname+'/public/index.html'));
 });
 
+app.get("/math", (req,res) => {
+    res.sendFile(path.join(__dirname+'/public/math.html'));
+});
+
 app.use("/calculator", calculator);
 
 app.listen(port,()=> {
