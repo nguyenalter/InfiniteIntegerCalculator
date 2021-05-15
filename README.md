@@ -17,7 +17,7 @@ Input may start with an unary op like "+" or "-" and following by many digits. A
 
 ## Features
 
-The calculator can calculate a very large number. In addition, it has some utilities to view calculation history, delete it or even save it locally.
+The calculator can handle. In addition, it has some utilities to view calculation history, delete it or even save it locally.
 
 ## Demo
 
@@ -36,7 +36,7 @@ Calculator uses a number of open source projects:
 - [custom Blob] - a custom Blob instead of default one
 
 
-**  Reference Links **
+[//]:
    [Bootstrap]: <https://getbootstrap.com/docs/4.6>
    [Node.js]: <https://nodejs.org>
    [Express]: <http://daringfireball.net>
